@@ -344,10 +344,10 @@ async function runAnalysis() {
   btnText.textContent = "AI Vector Server Evaluating...";
 
   const formData = new FormData();
-  formData.append("full_name", candidateName);          // full_name (Form field)
-  formData.append("target_role", targetRole);            // target_role (Form field)
-  formData.append("institution_id", "poornima");         // institution_id (Form field)
-  formData.append("resume_file", resumeInput.files[0]);  // resume_file (File upload)
+  formData.append("full_name", nameInput.value.trim());
+  formData.append("target_role", roleSelect.value || "frontend");
+  formData.append("institution_id", "poornima");
+  formData.append("resume_file", fileInput.files[0]);
 
   try {
     const res = await fetch("https://skillbank-ai.onrender.com/api/v1/evaluate-resume", {
