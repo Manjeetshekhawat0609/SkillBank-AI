@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillBank Enterprise | AI Competency & Certification Ecosystem</title>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'></path><polyline points='9 22 9 12 15 12 15 22'></polyline></svg>" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- PDF.js Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- Chart.js for Radar Visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-black">
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/70 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-tr from-emerald-600 to-teal-400 p-2.5 rounded-xl shadow-lg shadow-emerald-500/20 text-slate-950 flex items-center justify-center">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+            Skill<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Bank</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">AI Enterprise</span>
+          </span>
+          <p class="text-[10px] text-slate-400 tracking-wide hidden sm:block">National Competency & Skilling Intelligence Platform</p>
+        </div>
+      </div>
+
+      <!-- View Switcher (Student vs Institutional HOD) -->
+      <div class="flex items-center gap-2">
+        <div class="bg-slate-900 border border-slate-700 p-1 rounded-xl flex items-center text-xs font-semibold">
+          <button id="btnStudentView" onclick="switchView('student')" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition flex items-center gap-1.5">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i> Student View
+          </button>
+          <button id="btnHodView" onclick="switchView('hod')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+            <i data-lucide="building-2" class="w-3.5 h-3.5"></i> HOD / Ministry View
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- 1. STUDENT VIEW SECTION -->
+    <div id="studentViewContainer">
+      <!-- Hero Banner -->
+      <div class="text-center mb-8 max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-3">
+          <i data-lucide="award" class="w-3.5 h-3.5"></i> MoSPI & State Skilling Unified Framework
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+          SkillBank Competency <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">& Readiness Engine</span>
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base mt-2.5">
+          Upload resume, search 40+ corporate profiles, evaluate via interactive Radar Analytics, learn from verified Web Docs & YouTube tutorials, and generate official credentials.
+        </p>
+      </div>
+
+      <!-- Candidate Input Section -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 max-w-4xl mx-auto mb-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">1. Candidate Full Name</label>
+            <input type="text" id="candidateName" placeholder="e.g. Roshan Patel" class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
+              <span>2. Corporate Target Role</span>
+              <span class="text-[10px] text-emerald-400 font-normal">Type 'ml', 'seo', 'sre'...</span>
+            </label>
+            <div class="space-y-2">
+              <input 
+                type="text" 
+                id="roleSearchInput" 
+                placeholder="Search e.g. Frontend, ML, SEO, SRE..." 
+                oninput="filterRoleDropdown()"
+                class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-400"
+              />
+              <select id="targetRole" class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer"></select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">3. Resume File (PDF Only)</label>
+            <input type="file" id="resumeFile" accept=".pdf" class="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-xl px-3 py-2.5 text-sm file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
+          </div>
+        </div>
+
+        <button id="analyzeBtn" onclick="runAnalysis()" class="w-full mt-6 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:from-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 uppercase tracking-wider text-sm shadow-lg shadow-emerald-500/20 active:scale-[0.99]">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span id="btnText">Evaluate Readiness & Build SkillBank Roadmap</span>
+        </button>
+
+        <div id="alertBox" class="hidden mt-4 p-3.5 bg-rose-950/60 border border-rose-800 rounded-xl text-xs text-rose-300 flex items-center gap-2.5">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
+          <span id="alertMsg">System notification</span>
+        </div>
+      </div>
+
+      <!-- Analytics Dashboard -->
+      <div id="analyticsDashboard" class="hidden space-y-8 max-w-6xl mx-auto">
+        
+        <!-- Metrics & Radar Visual Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Scorecard & Actions -->
+          <div class="space-y-6">
+            <div class="glass-panel p-6 rounded-3xl border-emerald-500/30">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-400"></i> Competency Readiness
+              </span>
+              <h2 id="displayRoleName" class="text-2xl font-black text-white mt-1">Frontend Web Engineer</h2>
+              <div class="mt-4 flex items-baseline gap-3">
+                <div id="scorePercentage" class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">0%</div>
+                <div id="scoreTag" class="text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Status</div>
+              </div>
+              
+              <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-300 space-y-1">
+                <p>Skills Validated: <strong id="countAcquired" class="text-emerald-400">0</strong></p>
+                <p>Skills to Learn: <strong id="countMissing" class="text-rose-400">0</strong></p>
+              </div>
+            </div>
+
+            <button onclick="openCertificateModal()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-3.5 rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+              <i data-lucide="award" class="w-4 h-4"></i>
+              <span>View Official SkillBank Certificate</span>
+            </button>
+          </div>
+
+          <!-- Radar Chart Visualizer (2 Columns Wide on Desktop) -->
+          <div class="glass-panel p-6 rounded-3xl border-slate-800 lg:col-span-2 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="radar" class="w-4 h-4 text-emerald-400"></i> Competency Benchmark Radar Graph
+              </h3>
+              <span class="text-[10px] text-slate-500 font-mono">Candidate vs Industry Standard</span>
+            </div>
+            <div class="relative w-full h-[280px] flex items-center justify-center">
+              <canvas id="skillRadarChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Skills Matrix -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-panel p-6 rounded-2xl border-emerald-500/20">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400">Validated Skills in Resume</h3>
+            </div>
+            <div id="acquiredTagsContainer" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="glass-panel p-6 rounded-2xl border-rose-500/20">
+            <div class="flex items-center gap-2 mb-4">
+              <i data-lucide="alert-circle" class="w-5 h-5 text-rose-400"></i>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400">Priority Skill Gaps</h3>
+            </div>
+            <div id="missingTagsContainer" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Dual Resource Roadmap Section -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-6">
+            <div>
+              <h3 class="text-lg font-black text-white flex items-center gap-2">
+                <i data-lucide="compass" class="w-5 h-5 text-teal-400"></i>
+                Personalized Learning Path (Web Docs + YouTube Videos)
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Verified free educational documentation and full-length video courses.</p>
+            </div>
+            <span class="text-xs bg-teal-500/10 text-teal-300 border border-teal-500/20 px-3 py-1 rounded-full font-medium self-start sm:self-auto">100% Free Access</span>
+          </div>
+          <div id="roadmapCardsContainer" class="space-y-4"></div>
+        </div>
+
+        <!-- In-House Diagnostic Quiz View -->
+        <div id="quizSection" class="hidden glass-panel p-6 sm:p-8 rounded-3xl border-teal-500/40">
+          <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+            <div>
+              <h3 id="quizTitle" class="text-base font-bold text-white">Diagnostic Verification Test</h3>
+              <p class="text-xs text-slate-400">Answer correctly to verify competency and boost your official SkillBank Score.</p>
+            </div>
+            <button onclick="document.getElementById('quizSection').classList.add('hidden')" class="text-slate-400 hover:text-white text-xs font-bold">✕ Close</button>
+          </div>
+          <div id="quizContent" class="space-y-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. INSTITUTIONAL / HOD DASHBOARD (B2G MODE) WITH DYNAMIC SELECTOR -->
+    <div id="hodViewContainer" class="hidden space-y-8 max-w-6xl mx-auto">
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border-emerald-500/30">
+        
+        <!-- Header & Institution Selector -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 border-b border-slate-800 pb-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Institutional & Ministry Analytics Portal
+            </span>
+            <h2 id="institutionHeading" class="text-2xl font-black text-white mt-1">Poornima University • Batch 2026 Skill Gap Audit</h2>
+            <p id="institutionSub" class="text-xs text-slate-400 mt-0.5">Continuous Internal Evaluation (CIE) & Placement Readiness Matrix</p>
+          </div>
+          
+          <!-- Select University or Type Custom Name -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto">
+            <select id="institutionSelect" onchange="handleInstitutionChange()" class="bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer">
+              <optgroup label="Universities & Engineering Colleges">
+                <option value="poornima" selected>Poornima University, Jaipur</option>
+                <option value="rtu">Rajasthan Technical University (RTU), Kota</option>
+                <option value="iit_delhi">IIT Delhi / Premier Institutes</option>
+                <option value="mu">University of Mumbai</option>
+                <option value="anna">Anna University, Chennai</option>
+                <option value="du">Delhi University (DU)</option>
+              </optgroup>
+              <optgroup label="Government Ministries & Skilling Bodies">
+                <option value="mospi">MoSPI (Ministry of Statistics & PI)</option>
+                <option value="maharashtra">Govt of Maharashtra (Skilling Directorate)</option>
+                <option value="nsdc">NSDC National Skilling Portal</option>
+              </optgroup>
+              <optgroup label="Custom Setup">
+                <option value="custom">✍️ Type Custom University / College</option>
+              </optgroup>
+            </select>
+
+            <input 
+              type="text" 
+              id="customUnivInput" 
+              placeholder="Type your college name..." 
+              oninput="applyCustomUniversity()"
+              class="hidden bg-slate-950 border border-emerald-500/50 text-slate-100 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-400"
+            />
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Average Match Index</span>
+            <p id="statAvgMatch" class="text-2xl font-black text-emerald-400 mt-1">68.4%</p>
+            <span id="statAvgDiff" class="text-[10px] text-emerald-300 mt-1 block">↑ 12% vs CIE-I Benchmark</span>
+          </div>
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Top Critical Gap</span>
+            <p id="statTopGap" class="text-2xl font-black text-rose-400 mt-1">Docker / Cloud</p>
+            <span id="statGapPercent" class="text-[10px] text-slate-400 mt-1 block">71% Candidates Missing</span>
+          </div>
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Strongest Domain</span>
+            <p id="statStrongDomain" class="text-2xl font-black text-teal-400 mt-1">Frontend / React</p>
+            <span id="statStrongPercent" class="text-[10px] text-slate-400 mt-1 block">84% Candidates Certified</span>
+          </div>
+          <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Certificates Issued</span>
+            <p id="statCerts" class="text-2xl font-black text-amber-400 mt-1">192</p>
+            <span class="text-[10px] text-slate-400 mt-1 block">Verifiable Credentials</span>
+          </div>
+        </div>
+
+        <!-- AI Action Recommendations -->
+        <div class="mt-8 p-5 bg-slate-900/50 rounded-2xl border border-slate-800">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+            Targeted Skilling Action Recommended by SkillBank AI
+          </h3>
+          <ul id="recommendationList" class="space-y-2.5 text-xs text-slate-300">
+            <!-- Dynamically populated via JS -->
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Executive Grade Certificate Modal -->
+    <div id="certificateModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div class="max-w-4xl w-full my-auto relative">
+        <div class="flex justify-end gap-3 mb-3 no-print">
+          <button onclick="window.print()" class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 text-xs font-extrabold px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xl shadow-emerald-500/30 active:scale-95">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>Print / Save Official PDF</span>
+          </button>
+          <button onclick="closeCertificateModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl transition">
+            ✕ Close
+          </button>
+        </div>
+
+        <div id="printableCertificate" class="bg-[#fafaf8] text-slate-900 rounded-2xl p-8 sm:p-12 shadow-2xl relative overflow-hidden border-[12px] border-[#1e293b]">
+          <div class="border-2 border-[#b45309]/50 p-6 relative">
+            <div class="absolute inset-0 flex items-center justify-center opacity-[0.035] pointer-events-none">
+              <svg class="w-96 h-96" viewBox="0 0 200 200" fill="currentColor">
+                <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M100 10 L120 70 L185 75 L135 115 L150 180 L100 145 L50 180 L65 115 L15 75 L80 70 Z"/>
+              </svg>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between border-b-2 border-slate-200 pb-5 mb-6 gap-4">
+              <div class="flex items-center gap-3">
+                <div class="bg-[#0f172a] text-amber-400 p-3 rounded-2xl shadow-md">
+                  <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                </div>
+                <div>
+                  <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-[#0f172a] font-serif">SKILL<span class="text-emerald-600">BANK</span></h1>
+                  <p class="text-[9px] uppercase font-bold tracking-widest text-[#b45309]">National Competency & Skilling Registry</p>
+                </div>
+              </div>
+
+              <div class="text-center sm:text-right">
+                <span class="text-[10px] font-mono font-bold bg-amber-50 text-amber-900 px-3 py-1 rounded border border-amber-300 block">
+                  HASH ID: <span id="certId">SKB-2026-X8839-IN</span>
+                </span>
+                <span class="text-[9px] text-slate-500 font-semibold block mt-1">Under National Education & Skilling Guidelines</span>
+              </div>
+            </div>
+
+            <div class="text-center my-6">
+              <span class="text-xs uppercase tracking-[0.25em] font-extrabold text-[#b45309] bg-amber-50 px-5 py-1.5 rounded-full border border-amber-200 inline-block">
+                Verified Credential of Skill Readiness
+              </span>
+              
+              <p class="text-xs sm:text-sm text-slate-500 mt-5 italic">This is to officially certify that</p>
+              
+              <h2 id="certCandidateName" class="text-3xl sm:text-4xl font-black text-[#0f172a] tracking-tight mt-1.5 uppercase font-serif underline decoration-amber-500 decoration-2 underline-offset-8">
+                Candidate Name
+              </h2>
+
+              <p class="text-xs sm:text-sm text-slate-700 max-w-xl mx-auto mt-6 leading-relaxed">
+                Has successfully demonstrated evaluated proficiency and validated competency against corporate benchmark standards for the professional role of 
+                <strong id="certRoleName" class="font-extrabold text-slate-950">Frontend Web Engineer</strong>, earning an audited Industry Readiness Score of:
+              </p>
+
+              <div class="inline-flex items-center gap-4 bg-[#0f172a] text-white px-8 py-3 rounded-2xl my-5 shadow-xl border-2 border-amber-400">
+                <div class="text-left">
+                  <span class="text-[9px] uppercase tracking-widest font-bold text-amber-400 block">Audited Competency</span>
+                  <span class="text-xs text-slate-300">Industry Match Level</span>
+                </div>
+                <div class="w-px h-8 bg-slate-700"></div>
+                <span id="certScore" class="text-4xl font-black text-emerald-400">85%</span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-5 border-t-2 border-slate-200 grid grid-cols-1 sm:grid-cols-3 items-end gap-4 text-center">
+              <div class="text-left space-y-1">
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Date of Evaluation</p>
+                <p id="certDate" class="text-xs font-bold text-slate-800">August 30, 2026</p>
+                <div class="pt-2 flex items-center gap-2">
+                  <div class="w-12 h-12 bg-white border border-slate-300 p-1 rounded shadow-sm flex items-center justify-center">
+                    <svg class="w-10 h-10 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M2 2h8v8H2zM4 4v4h4V4zm10-2h8v8h-8zm2 2v4h4V4zM2 14h8v8H2zm2 2v4h4v-4zm14-2h4v2h-4zm-4 0h2v4h-2zm4 4h4v4h-4zm-2 2h2v2h-2zm-2-2h2v2h-2zm0-4h2v2h-2z"/>
+                    </svg>
+                  </div>
+                  <div class="text-[9px] text-slate-500 leading-tight">
+                    <span class="font-bold text-slate-700 block">Scan to Verify</span>
+                    <span>Digital Hash Secure</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-center justify-center">
+                <div class="w-20 h-20 rounded-full border-4 border-double border-[#b45309] bg-gradient-to-tr from-amber-100 to-amber-50 flex flex-col items-center justify-center text-[#b45309] shadow-inner relative">
+                  <div class="absolute inset-1 border border-dashed border-[#b45309] rounded-full"></div>
+                  <svg class="w-5 h-5 mb-0.5 text-[#b45309]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <span class="text-[7px] font-black uppercase text-center tracking-tighter leading-none">SKILLBANK<br/>OFFICIAL<br/>SEAL 2026</span>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <div class="inline-block border-b-2 border-slate-400 pb-1 px-4 mb-1">
+                  <span class="font-['Great_Vibes'] text-2xl text-slate-900 block leading-none select-none">K. S. Rathore</span>
+                </div>
+                <p class="text-[11px] font-extrabold text-slate-900 uppercase tracking-wider">Dr. K. S. Rathore</p>
+                <p class="text-[9px] text-slate-500 font-semibold">Director of Technical Competency Board</p>
+                <p class="text-[8px] text-slate-400 uppercase tracking-widest">SkillBank India • SIH 2026</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
