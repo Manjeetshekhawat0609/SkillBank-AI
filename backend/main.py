@@ -3,13 +3,13 @@ import re
 import hashlib
 from datetime import datetime
 from typing import Dict, Any, List
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTasks
-from fastapi.middleware.cors import CORSMiddleware
-import pypdf
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # <-- 1. Yeh import add karein
 from supabase import create_client, Client
 
 app = FastAPI(title="SkillBank AI Engine")
 
+# 2. Yeh middleware block add karein (app banne ke theek baad):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
