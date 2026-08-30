@@ -1,15 +1,16 @@
 import io
 import re
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
-from fastapi.middleware.cors import CORSMiddleware  # <-- 1. Yeh import add karein
+import pypdf
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
 from supabase import create_client, Client
 
 app = FastAPI(title="SkillBank AI Engine")
 
-# 2. Yeh middleware block add karein (app banne ke theek baad):
+# CORS Middleware (Allows frontend to communicate with backend seamlessly)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -224,7 +225,8 @@ async def evaluate_resume(
     total_skills = len(required_skills)
     readiness_score = int((len(acquired) / total_skills) * 100) if total_skills > 0 else 0
 
-    token_seed = f"{full_name}:{target_role}:{readiness_score}:{datetime.utcnow().isoformat()}"
+    now_iso = datetime.now(timezone.utc).isoformat()
+    token_seed = f"{full_name}:{target_role}:{readiness_score}:{now_iso}"
     cert_hash = "SKB-2026-" + hashlib.sha256(token_seed.encode()).hexdigest()[:8].upper() + "-IN"
 
     background_tasks.add_task(
