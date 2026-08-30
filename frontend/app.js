@@ -351,13 +351,15 @@ async function runAnalysis() {
 
   try {
     const res = await fetch("https://skillbank-ai.onrender.com/api/v1/evaluate-resume", {
-      method: "POST",
-      body: formData
-    });
+    method: "POST",
+    body: formData
+  });
 
-    if (!res.ok) {
-      throw new Error(`Server returned status ${res.status}`);
-    }
+  if (!res.ok) {
+    const errorDetail = await res.json();
+    console.error("422 Details from Backend:", errorDetail);
+    throw new Error(`Server returned status ${res.status}`);
+  }
 
     const data = await res.json();
 
