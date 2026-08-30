@@ -350,7 +350,7 @@ async function runAnalysis() {
   formData.append("resume_file", fileInput.files[0]);
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/v1/evaluate-resume", {
+    const res = await fetch("http://skillbank-ai.onrender.com/api/v1/evaluate-resume", {
       method: "POST",
       body: formData
     });
