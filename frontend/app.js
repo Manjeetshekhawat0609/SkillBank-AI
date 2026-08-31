@@ -336,6 +336,7 @@ async function runAnalysis() {
 
   let responseData = null;
   let success = false;
+  let backendError = "";
 
   for (const endpoint of ENDPOINTS) {
     try {
@@ -344,20 +345,36 @@ async function runAnalysis() {
         body: formData
       });
 
+      const payload = await res.json().catch(() => ({}));
+
       if (res.ok) {
-        responseData = await res.json();
+        responseData = payload;
         success = true;
         break;
       }
+
+      backendError =
+        payload.detail ||
+        `Evaluation failed with status ${res.status}.`;
+
     } catch (e) {
       console.warn(`Request failed for ${endpoint}:`, e);
     }
   }
 
   if (!success || !responseData) {
-    showAlert("Unable to connect to evaluation engine. Ensure your backend server is awake and accessible.");
+    showAlert(
+      backendError ||
+      "Unable to connect to evaluation engine. Ensure your backend server is awake and accessible."
+    );
+
     if (analyzeBtn) analyzeBtn.disabled = false;
-    if (btnText) btnText.textContent = "Evaluate Readiness & Build SkillBank Roadmap";
+
+    if (btnText) {
+      btnText.textContent =
+        "Evaluate Readiness & Build SkillBank Roadmap";
+    }
+
     return;
   }
 
