@@ -76,92 +76,96 @@
 
       <!-- Candidate Input Section -->
       <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 max-w-4xl mx-auto mb-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">1. Candidate Full Name</label>
-            <input type="text" id="candidateName" placeholder="e.g. Roshan Patel" class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
+        <form id="evaluationForm" onsubmit="event.preventDefault(); runAnalysis();">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div>
+              <label for="candidateName" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">1. Candidate Full Name</label>
+              <input type="text" id="candidateName" name="candidateName" placeholder="e.g. Roshan Patel" required class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
+            </div>
+
+            <div>
+              <label for="targetRoleInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
+                <span>2. Corporate Target Role</span>
+                <span class="text-[10px] text-emerald-400 font-normal">Select or type acronyms</span>
+              </label>
+              <input 
+                type="text" 
+                id="targetRoleInput" 
+                name="targetRoleInput"
+                list="roleDataList" 
+                placeholder="Search 40+ roles (e.g. ML, SRE, SEO...)" 
+                required
+                class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
+              />
+              <datalist id="roleDataList">
+                <!-- Web & Software Engineering -->
+                <option value="Frontend Web Engineer"></option>
+                <option value="Backend API Engineer"></option>
+                <option value="Full-Stack Software Engineer"></option>
+                <option value="Android Native Developer"></option>
+                <option value="iOS Native Developer"></option>
+                <option value="Cross-Platform Flutter Developer"></option>
+                <option value="React Native Developer"></option>
+                <option value="QA Automation Engineer (SDET)"></option>
+                <option value="Manual QA & Functional Tester"></option>
+                <option value="Embedded Systems & IoT Engineer"></option>
+                <option value="Game Developer (Unity / Unreal)"></option>
+                <option value="Blockchain & Smart Contract Developer"></option>
+
+                <!-- Data, AI & Machine Learning -->
+                <option value="Data Analyst & BI Specialist"></option>
+                <option value="Data Engineer (Big Data & ETL)"></option>
+                <option value="Machine Learning & NLP Engineer"></option>
+                <option value="Deep Learning & Computer Vision Engineer"></option>
+                <option value="Generative AI & LLM Applications Engineer"></option>
+                <option value="AI Prompt Engineer & Evaluator"></option>
+                <option value="Quantitative Research & Financial Data Analyst"></option>
+                <option value="Statistical Cadre & Survey Analyst (MoSPI Track)"></option>
+
+                <!-- Cloud, DevOps & Infrastructure -->
+                <option value="DevOps & Cloud Infrastructure Engineer"></option>
+                <option value="Site Reliability Engineer (SRE)"></option>
+                <option value="Cloud Security Engineer"></option>
+                <option value="Linux System Administrator"></option>
+                <option value="Database Administrator (DBA - SQL/NoSQL)"></option>
+
+                <!-- Cybersecurity -->
+                <option value="Cyber Security & SOC Analyst"></option>
+                <option value="Penetration Tester & Ethical Hacker (VAPT)"></option>
+                <option value="Information Security & Compliance Auditor"></option>
+                <option value="Network Security Engineer"></option>
+
+                <!-- Product, Design & Management -->
+                <option value="UI/UX & Product Designer"></option>
+                <option value="Graphic Designer & Brand Visualizer"></option>
+                <option value="Product Manager (PM / APM)"></option>
+                <option value="Technical Project Manager (Scrum / Agile)"></option>
+                <option value="Business Analyst (IT & Corporate Strategy)"></option>
+
+                <!-- Marketing, Sales & Operations -->
+                <option value="SEO Specialist & Organic Growth Strategist"></option>
+                <option value="Performance & Digital Marketing Specialist"></option>
+                <option value="Content Strategist & Technical Writer"></option>
+                <option value="Social Media & Community Manager"></option>
+                <option value="Business Development Executive (B2B Sales)"></option>
+                <option value="Inside Sales & Account Executive"></option>
+                <option value="Financial Analyst & Equity Research"></option>
+                <option value="Technical Recruiter & Talent Acquisition"></option>
+                <option value="Human Resources Executive (HR Generalist)"></option>
+              </datalist>
+            </div>
+
+            <div>
+              <label for="resumeFile" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">3. Resume File (PDF Only)</label>
+              <input type="file" id="resumeFile" name="resumeFile" accept=".pdf" required class="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-xl px-3 py-2.5 text-sm file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
+            </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
-              <span>2. Corporate Target Role</span>
-              <span class="text-[10px] text-emerald-400 font-normal">Select or type acronyms</span>
-            </label>
-            <input 
-              type="text" 
-              id="targetRoleInput" 
-              list="roleDataList" 
-              placeholder="Search 40+ roles (e.g. ML, SRE, SEO...)" 
-              class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
-            />
-            <datalist id="roleDataList">
-              <!-- Web & Software Engineering -->
-              <option value="Frontend Web Engineer"></option>
-              <option value="Backend API Engineer"></option>
-              <option value="Full-Stack Software Engineer"></option>
-              <option value="Android Native Developer"></option>
-              <option value="iOS Native Developer"></option>
-              <option value="Cross-Platform Flutter Developer"></option>
-              <option value="React Native Developer"></option>
-              <option value="QA Automation Engineer (SDET)"></option>
-              <option value="Manual QA & Functional Tester"></option>
-              <option value="Embedded Systems & IoT Engineer"></option>
-              <option value="Game Developer (Unity / Unreal)"></option>
-              <option value="Blockchain & Smart Contract Developer"></option>
-
-              <!-- Data, AI & Machine Learning -->
-              <option value="Data Analyst & BI Specialist"></option>
-              <option value="Data Engineer (Big Data & ETL)"></option>
-              <option value="Machine Learning & NLP Engineer"></option>
-              <option value="Deep Learning & Computer Vision Engineer"></option>
-              <option value="Generative AI & LLM Applications Engineer"></option>
-              <option value="AI Prompt Engineer & Evaluator"></option>
-              <option value="Quantitative Research & Financial Data Analyst"></option>
-              <option value="Statistical Cadre & Survey Analyst (MoSPI Track)"></option>
-
-              <!-- Cloud, DevOps & Infrastructure -->
-              <option value="DevOps & Cloud Infrastructure Engineer"></option>
-              <option value="Site Reliability Engineer (SRE)"></option>
-              <option value="Cloud Security Engineer"></option>
-              <option value="Linux System Administrator"></option>
-              <option value="Database Administrator (DBA - SQL/NoSQL)"></option>
-
-              <!-- Cybersecurity -->
-              <option value="Cyber Security & SOC Analyst"></option>
-              <option value="Penetration Tester & Ethical Hacker (VAPT)"></option>
-              <option value="Information Security & Compliance Auditor"></option>
-              <option value="Network Security Engineer"></option>
-
-              <!-- Product, Design & Management -->
-              <option value="UI/UX & Product Designer"></option>
-              <option value="Graphic Designer & Brand Visualizer"></option>
-              <option value="Product Manager (PM / APM)"></option>
-              <option value="Technical Project Manager (Scrum / Agile)"></option>
-              <option value="Business Analyst (IT & Corporate Strategy)"></option>
-
-              <!-- Marketing, Sales & Operations -->
-              <option value="SEO Specialist & Organic Growth Strategist"></option>
-              <option value="Performance & Digital Marketing Specialist"></option>
-              <option value="Content Strategist & Technical Writer"></option>
-              <option value="Social Media & Community Manager"></option>
-              <option value="Business Development Executive (B2B Sales)"></option>
-              <option value="Inside Sales & Account Executive"></option>
-              <option value="Financial Analyst & Equity Research"></option>
-              <option value="Technical Recruiter & Talent Acquisition"></option>
-              <option value="Human Resources Executive (HR Generalist)"></option>
-            </datalist>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">3. Resume File (PDF Only)</label>
-            <input type="file" id="resumeFile" accept=".pdf" class="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-xl px-3 py-2.5 text-sm file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
-          </div>
-        </div>
-
-        <button id="analyzeBtn" onclick="runAnalysis()" class="w-full mt-6 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:from-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 uppercase tracking-wider text-sm shadow-lg shadow-emerald-500/20 active:scale-[0.99]">
-          <i data-lucide="sparkles" class="w-4 h-4"></i>
-          <span id="btnText">Evaluate Readiness & Build SkillBank Roadmap</span>
-        </button>
+          <button type="submit" id="analyzeBtn" class="w-full mt-6 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:from-emerald-400 text-slate-950 font-black py-3.5 px-6 rounded-xl transition flex items-center justify-center gap-2 uppercase tracking-wider text-sm shadow-lg shadow-emerald-500/20 active:scale-[0.99]">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span id="btnText">Evaluate Readiness & Build SkillBank Roadmap</span>
+          </button>
+        </form>
 
         <div id="alertBox" class="hidden mt-4 p-3.5 bg-rose-950/60 border border-rose-800 rounded-xl text-xs text-rose-300 flex items-center gap-2.5">
           <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
@@ -172,6 +176,21 @@
       <!-- Analytics Dashboard -->
       <div id="analyticsDashboard" class="hidden space-y-8 max-w-6xl mx-auto">
         
+        <!-- Live Market Alignment Pulse Bar -->
+        <div id="marketPulseContainer" class="glass-panel p-4 rounded-2xl border border-teal-500/30 bg-slate-900/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Live Industry Market Demand Pulse</span>
+              <p id="marketPulseText" class="text-xs text-slate-300">Tracking real-time hiring demand & tech stacks across LinkedIn and corporate portals.</p>
+            </div>
+          </div>
+          <div id="marketTrendingBadges" class="flex flex-wrap gap-1.5 text-[11px] font-semibold"></div>
+        </div>
+
         <!-- Metrics & Radar Visual Row -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           

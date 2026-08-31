@@ -1,51 +1,176 @@
-/* Glassmorphism Panel */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* ==========================================================================
+   SkillBank AI Enterprise Design System & Utility Styles
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Great+Vibes&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --primary-emerald: #10b981;
+  --primary-teal: #14b8a6;
+  --primary-cyan: #06b6d4;
+  --accent-gold: #b45309;
+  --surface-dark: #090d16;
+  --surface-panel: rgba(15, 23, 42, 0.85);
+  --border-subtle: rgba(255, 255, 255, 0.08);
 }
 
-/* Custom Minimal Scrollbar */
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--surface-dark);
+  color: #f1f5f9;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+  background: var(--surface-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+/* Custom Minimalist Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #020617;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #334155;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  border-radius: 9999px;
 }
 
-/* High-Grade Print Engine for PDF Export */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-emerald);
+}
+
+/* Glow & Accent Utilities */
+.glow-emerald {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+}
+
+.glow-teal {
+  box-shadow: 0 0 25px rgba(20, 184, 166, 0.15);
+}
+
+/* Dynamic Animation Utilities */
+@keyframes pulseSubtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s infinite ease-in-out;
+}
+
+@keyframes shimmerEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmerEffect 2.5s infinite;
+}
+
+/* Interactive Card Hover States */
+.learning-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.learning-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(20, 184, 166, 0.4);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+}
+
+/* Certificate Typography */
+.font-serif-cert {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.font-script-signature {
+  font-family: 'Great Vibes', cursive;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==========================================================================
+   Executive Certificate Print Engine (A4 Aspect Ratio Guarantee)
+   ========================================================================== */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
   body {
     background: #ffffff !important;
     color: #000000 !important;
     padding: 0 !important;
     margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  header, main > div, #analyticsDashboard, .no-print, button {
+  /* Hide entire UI except the certificate modal */
+  header,
+  footer,
+  main > div:not(#certificateModal),
+  #studentViewContainer,
+  #hodViewContainer,
+  #analyticsDashboard,
+  .no-print,
+  button,
+  input,
+  select {
     display: none !important;
   }
 
   #certificateModal {
-    position: static !important;
-    background: transparent !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: #ffffff !important;
     display: block !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: visible !important;
   }
 
   #printableCertificate {
-    border: 6px solid #0f172a !important;
+    border: 8px solid #0f172a !important;
     box-shadow: none !important;
     width: 100% !important;
+    margin: 0 auto !important;
     page-break-inside: avoid !important;
     background-color: #fafaf8 !important;
     -webkit-print-color-adjust: exact !important;
