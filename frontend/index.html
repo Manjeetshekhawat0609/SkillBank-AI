@@ -85,18 +85,71 @@
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
               <span>2. Corporate Target Role</span>
-              <span class="text-[10px] text-emerald-400 font-normal">Type 'ml', 'seo', 'sre'...</span>
+              <span class="text-[10px] text-emerald-400 font-normal">Select or type acronyms</span>
             </label>
-            <div class="space-y-2">
-              <input 
-                type="text" 
-                id="roleSearchInput" 
-                placeholder="Search e.g. Frontend, ML, SEO, SRE..." 
-                oninput="filterRoleDropdown()"
-                class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-400"
-              />
-              <select id="targetRole" class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer"></select>
-            </div>
+            <input 
+              type="text" 
+              id="targetRoleInput" 
+              list="roleDataList" 
+              placeholder="Search 40+ roles (e.g. ML, SRE, SEO...)" 
+              class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500"
+            />
+            <datalist id="roleDataList">
+              <!-- Web & Software Engineering -->
+              <option value="Frontend Web Engineer"></option>
+              <option value="Backend API Engineer"></option>
+              <option value="Full-Stack Software Engineer"></option>
+              <option value="Android Native Developer"></option>
+              <option value="iOS Native Developer"></option>
+              <option value="Cross-Platform Flutter Developer"></option>
+              <option value="React Native Developer"></option>
+              <option value="QA Automation Engineer (SDET)"></option>
+              <option value="Manual QA & Functional Tester"></option>
+              <option value="Embedded Systems & IoT Engineer"></option>
+              <option value="Game Developer (Unity / Unreal)"></option>
+              <option value="Blockchain & Smart Contract Developer"></option>
+
+              <!-- Data, AI & Machine Learning -->
+              <option value="Data Analyst & BI Specialist"></option>
+              <option value="Data Engineer (Big Data & ETL)"></option>
+              <option value="Machine Learning & NLP Engineer"></option>
+              <option value="Deep Learning & Computer Vision Engineer"></option>
+              <option value="Generative AI & LLM Applications Engineer"></option>
+              <option value="AI Prompt Engineer & Evaluator"></option>
+              <option value="Quantitative Research & Financial Data Analyst"></option>
+              <option value="Statistical Cadre & Survey Analyst (MoSPI Track)"></option>
+
+              <!-- Cloud, DevOps & Infrastructure -->
+              <option value="DevOps & Cloud Infrastructure Engineer"></option>
+              <option value="Site Reliability Engineer (SRE)"></option>
+              <option value="Cloud Security Engineer"></option>
+              <option value="Linux System Administrator"></option>
+              <option value="Database Administrator (DBA - SQL/NoSQL)"></option>
+
+              <!-- Cybersecurity -->
+              <option value="Cyber Security & SOC Analyst"></option>
+              <option value="Penetration Tester & Ethical Hacker (VAPT)"></option>
+              <option value="Information Security & Compliance Auditor"></option>
+              <option value="Network Security Engineer"></option>
+
+              <!-- Product, Design & Management -->
+              <option value="UI/UX & Product Designer"></option>
+              <option value="Graphic Designer & Brand Visualizer"></option>
+              <option value="Product Manager (PM / APM)"></option>
+              <option value="Technical Project Manager (Scrum / Agile)"></option>
+              <option value="Business Analyst (IT & Corporate Strategy)"></option>
+
+              <!-- Marketing, Sales & Operations -->
+              <option value="SEO Specialist & Organic Growth Strategist"></option>
+              <option value="Performance & Digital Marketing Specialist"></option>
+              <option value="Content Strategist & Technical Writer"></option>
+              <option value="Social Media & Community Manager"></option>
+              <option value="Business Development Executive (B2B Sales)"></option>
+              <option value="Inside Sales & Account Executive"></option>
+              <option value="Financial Analyst & Equity Research"></option>
+              <option value="Technical Recruiter & Talent Acquisition"></option>
+              <option value="Human Resources Executive (HR Generalist)"></option>
+            </datalist>
           </div>
 
           <div>

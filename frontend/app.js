@@ -4,10 +4,20 @@ let computedScore = 0;
 let activeRoleTitle = "";
 let radarChartInstance = null;
 
+function safeCreateIcons() {
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    try {
+      lucide.createIcons();
+    } catch (e) {
+      console.warn("Lucide icon creation skipped:", e);
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   populateRoleDropdown("");
   updateInstitutionData();
-  lucide.createIcons();
+  safeCreateIcons();
 });
 
 // ----------------------------------------------------
@@ -30,7 +40,7 @@ function switchView(view) {
     btnHod.className = "px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition flex items-center gap-1.5";
     btnStudent.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
   }
-  lucide.createIcons();
+  safeCreateIcons();
 }
 
 // ----------------------------------------------------
@@ -214,7 +224,7 @@ function applyCustomUniversity() {
       <span>Track verified skill badges to bridge corporate recruitment gaps for ${name}.</span>
     </li>
   `;
-  lucide.createIcons();
+  safeCreateIcons();
 }
 
 function updateInstitutionData() {
@@ -240,7 +250,7 @@ function updateInstitutionData() {
     </li>
   `).join('');
 
-  lucide.createIcons();
+  safeCreateIcons();
 }
 
 // ----------------------------------------------------
@@ -254,6 +264,10 @@ function populateRoleDropdown(filterText = "") {
   const categories = {};
   const query = filterText.toLowerCase().trim();
 
+  if (typeof REGISTRY === "undefined") {
+    return;
+  }
+
   Object.keys(REGISTRY).forEach(key => {
     const role = REGISTRY[key];
     const cat = role.category || "General Corporate";
@@ -261,8 +275,8 @@ function populateRoleDropdown(filterText = "") {
     
     const matches = !query || 
                     role.title.toLowerCase().includes(query) || 
-                    cat.toLowerCase().includes(query) ||
-                    key.toLowerCase().includes(query) ||
+                    cat.toLowerCase().includes(query) || 
+                    key.toLowerCase().includes(query) || 
                     tags.some(tag => tag.toLowerCase().includes(query) || query.includes(tag.toLowerCase()));
 
     if (matches) {
@@ -311,9 +325,9 @@ function sanitize(text) {
 function showAlert(msg) {
   const box = document.getElementById('alertBox');
   const msgEl = document.getElementById('alertMsg');
-  msgEl.textContent = msg;
-  box.classList.remove('hidden');
-  lucide.createIcons();
+  if (msgEl) msgEl.textContent = msg;
+  if (box) box.classList.remove('hidden');
+  safeCreateIcons();
 }
 
 // ----------------------------------------------------
@@ -321,127 +335,149 @@ function showAlert(msg) {
 // ----------------------------------------------------
 async function runAnalysis() {
   const fileInput = document.getElementById('resumeFile');
-  const roleSelect = document.getElementById('targetRole');
+  const roleInput = document.getElementById('targetRoleInput');
   const nameInput = document.getElementById('candidateName');
   const btnText = document.getElementById('btnText');
-  document.getElementById('alertBox').classList.add('hidden');
+  const alertBox = document.getElementById('alertBox');
+  if (alertBox) alertBox.classList.add('hidden');
 
-  if (!nameInput.value.trim()) {
+  if (!nameInput || !nameInput.value.trim()) {
     showAlert("Please enter candidate full name.");
     return;
   }
 
-  if (!roleSelect.value) {
-    showAlert("Please choose a valid corporate role from the list.");
+  if (!roleInput || !roleInput.value.trim()) {
+    showAlert("Please choose or enter a valid corporate role.");
     return;
   }
 
-  if (!fileInput.files || fileInput.files.length === 0) {
+  if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
     showAlert("Please upload a PDF resume file to continue.");
     return;
   }
 
-  btnText.textContent = "AI Vector Server Evaluating...";
+  if (btnText) btnText.textContent = "AI Vector Server Evaluating...";
+
+  const candidateName = nameInput.value.trim();
+  const selectedRole = roleInput.value.trim();
 
   const formData = new FormData();
-  formData.append("full_name", nameInput.value.trim());
-  formData.append("target_role", roleSelect.value || "frontend");
+  formData.append("full_name", candidateName);
+  formData.append("target_role", selectedRole);
   formData.append("institution_id", "poornima");
   formData.append("resume_file", fileInput.files[0]);
 
   try {
     const res = await fetch("https://skillbank-ai.onrender.com/api/v1/evaluate-resume", {
-    method: "POST",
-    body: formData
-  });
+      method: "POST",
+      body: formData
+    });
 
-  if (!res.ok) {
-    const errorDetail = await res.json();
-    console.error("422 Details from Backend:", errorDetail);
-    throw new Error(`Server returned status ${res.status}`);
-  }
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error("Server Error:", err);
+      throw new Error(`Server returned status ${res.status}`);
+    }
 
     const data = await res.json();
 
     // 1. Update Metrics
-    computedScore = data.readiness_score;
-    activeRoleTitle = data.role_title;
+    computedScore = data.readiness_score || 0;
+    activeRoleTitle = data.role_title || selectedRole;
 
-    document.getElementById('displayRoleName').textContent = data.role_title;
-    document.getElementById('scorePercentage').textContent = computedScore + "%";
-    document.getElementById('countAcquired').textContent = data.acquired_skills.length;
-    document.getElementById('countMissing').textContent = data.missing_skills.length;
-
+    const displayRole = document.getElementById('displayRoleName');
+    const scorePct = document.getElementById('scorePercentage');
+    const cntAcq = document.getElementById('countAcquired');
+    const cntMiss = document.getElementById('countMissing');
     const tag = document.getElementById('scoreTag');
-    if (computedScore >= 70) {
-      tag.textContent = "High Match • Corporate Ready";
-      tag.className = "text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-    } else {
-      tag.textContent = "Skilling Gap Identified";
-      tag.className = "text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+
+    if (displayRole) displayRole.textContent = activeRoleTitle;
+    if (scorePct) scorePct.textContent = computedScore + "%";
+    if (cntAcq) cntAcq.textContent = (data.acquired_skills || []).length;
+    if (cntMiss) cntMiss.textContent = (data.missing_skills || []).length;
+
+    if (tag) {
+      if (computedScore >= 70) {
+        tag.textContent = "High Match • Corporate Ready";
+        tag.className = "text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+      } else {
+        tag.textContent = "Skilling Gap Identified";
+        tag.className = "text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+      }
     }
 
     // 2. Acquired & Missing Tags
-    document.getElementById('acquiredTagsContainer').innerHTML = data.acquired_skills.length > 0
-      ? data.acquired_skills.map(s => `<span class="bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">${sanitize(s)}</span>`).join('')
-      : `<span class="text-xs text-slate-500">No matching skills detected.</span>`;
+    const acqContainer = document.getElementById('acquiredTagsContainer');
+    if (acqContainer) {
+      acqContainer.innerHTML = (data.acquired_skills && data.acquired_skills.length > 0)
+        ? data.acquired_skills.map(s => `<span class="bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">${sanitize(s)}</span>`).join('')
+        : `<span class="text-xs text-slate-500">No matching skills detected.</span>`;
+    }
 
-    document.getElementById('missingTagsContainer').innerHTML = data.missing_skills.length > 0
-      ? data.missing_skills.map(s => `<span class="bg-rose-950/80 border border-rose-700/60 text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">${sanitize(s)}</span>`).join('')
-      : `<span class="text-xs text-emerald-400">All mandatory competencies fulfilled!</span>`;
+    const missContainer = document.getElementById('missingTagsContainer');
+    if (missContainer) {
+      missContainer.innerHTML = (data.missing_skills && data.missing_skills.length > 0)
+        ? data.missing_skills.map(s => `<span class="bg-rose-950/80 border border-rose-700/60 text-rose-300 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">${sanitize(s)}</span>`).join('')
+        : `<span class="text-xs text-emerald-400">All mandatory competencies fulfilled!</span>`;
+    }
 
     // 3. Dynamic Dual-Learning Path Cards
     const roadmapContainer = document.getElementById('roadmapCardsContainer');
-    roadmapContainer.innerHTML = (data.missing_details || []).map((item, idx) => {
-      const hasQuiz = Boolean(QUIZZES && QUIZZES[item.skill]);
+    if (roadmapContainer) {
+      roadmapContainer.innerHTML = (data.missing_details || []).map((item, idx) => {
+        const hasQuiz = Boolean(typeof QUIZZES !== "undefined" && QUIZZES && QUIZZES[item.skill]);
 
-      return `
-        <div class="glass-panel p-5 rounded-2xl border-l-4 border-teal-400 flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div class="space-y-1.5 max-w-2xl">
-            <div class="flex items-center gap-2">
-              <span class="bg-slate-800 text-teal-300 text-xs font-mono font-bold px-2 py-0.5 rounded border border-slate-700">Module ${idx + 1}</span>
-              <h4 class="text-sm font-black uppercase tracking-wider text-white">${sanitize(item.skill)}</h4>
+        return `
+          <div class="glass-panel p-5 rounded-2xl border-l-4 border-teal-400 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div class="space-y-1.5 max-w-2xl">
+              <div class="flex items-center gap-2">
+                <span class="bg-slate-800 text-teal-300 text-xs font-mono font-bold px-2 py-0.5 rounded border border-slate-700">Module ${idx + 1}</span>
+                <h4 class="text-sm font-black uppercase tracking-wider text-white">${sanitize(item.skill)}</h4>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed">${sanitize(item.guide)}</p>
+              
+              <div class="flex flex-wrap items-center gap-4 pt-2">
+                <a href="${sanitize(item.webUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 underline underline-offset-4 transition">
+                  <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-400"></i>
+                  <span>Study on ${sanitize(item.webPlatform)}</span>
+                </a>
+                <a href="${sanitize(item.ytUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-400 hover:text-rose-300 underline underline-offset-4 transition">
+                  <i data-lucide="play-square" class="w-3.5 h-3.5 text-rose-400"></i>
+                  <span>Watch on ${sanitize(item.ytPlatform)}</span>
+                </a>
+              </div>
             </div>
-            <p class="text-xs text-slate-300 leading-relaxed">${sanitize(item.guide)}</p>
-            
-            <div class="flex flex-wrap items-center gap-4 pt-2">
-              <a href="${sanitize(item.webUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 underline underline-offset-4 transition">
-                <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-400"></i>
-                <span>Study on ${sanitize(item.webPlatform)}</span>
-              </a>
-              <a href="${sanitize(item.ytUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-400 hover:text-rose-300 underline underline-offset-4 transition">
-                <i data-lucide="play-square" class="w-3.5 h-3.5 text-rose-400"></i>
-                <span>Watch on ${sanitize(item.ytPlatform)}</span>
-              </a>
+
+            <div class="flex-shrink-0">
+              ${hasQuiz ? `
+                <button onclick="launchQuiz('${item.skill}')" class="w-full md:w-auto bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
+                  <i data-lucide="help-circle" class="w-4 h-4 text-teal-400"></i>
+                  <span>Take Diagnostic Test</span>
+                </button>
+              ` : `
+                <span class="text-[11px] text-slate-500 font-mono italic">Self-Guided Track</span>
+              `}
             </div>
           </div>
-
-          <div class="flex-shrink-0">
-            ${hasQuiz ? `
-              <button onclick="launchQuiz('${item.skill}')" class="w-full md:w-auto bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/40 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm">
-                <i data-lucide="help-circle" class="w-4 h-4 text-teal-400"></i>
-                <span>Take Diagnostic Test</span>
-              </button>
-            ` : `
-              <span class="text-[11px] text-slate-500 font-mono italic">Self-Guided Track</span>
-            `}
-          </div>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
+    }
 
     // 4. Render Dynamic Radar Graph
-    const allSkills = [...data.acquired_skills, ...data.missing_skills];
-    renderRadarChart(allSkills, data.acquired_skills);
+    const acquiredSkills = data.acquired_skills || [];
+    const missingSkills = data.missing_skills || [];
+    const allSkills = [...acquiredSkills, ...missingSkills];
+    renderRadarChart(allSkills, acquiredSkills);
 
-    document.getElementById('analyticsDashboard').classList.remove('hidden');
-    lucide.createIcons();
+    const dashboard = document.getElementById('analyticsDashboard');
+    if (dashboard) dashboard.classList.remove('hidden');
+    safeCreateIcons();
 
   } catch (err) {
-    console.error(err);
-    showAlert("Server connection failed. Make sure your Python backend is running on port 8000.");
+    console.error("Evaluation Error:", err);
+    showAlert("Evaluation failed. Make sure your Render backend is awake and active.");
   } finally {
-    btnText.textContent = "Evaluate Readiness & Build SkillBank Roadmap";
+    if (btnText) btnText.textContent = "Evaluate Readiness & Build SkillBank Roadmap";
   }
 }
 
@@ -449,7 +485,10 @@ async function runAnalysis() {
 // 5. Radar Chart Engine
 // ----------------------------------------------------
 function renderRadarChart(skills, acquired) {
-  const ctx = document.getElementById('skillRadarChart').getContext('2d');
+  const chartEl = document.getElementById('skillRadarChart');
+  if (!chartEl || typeof Chart === "undefined") return;
+
+  const ctx = chartEl.getContext('2d');
   
   if (radarChartInstance) {
     radarChartInstance.destroy();
@@ -510,8 +549,8 @@ function renderRadarChart(skills, acquired) {
 // 6. Diagnostic Test & Interactive Grading
 // ----------------------------------------------------
 function launchQuiz(skill) {
+  if (typeof QUIZZES === "undefined" || !QUIZZES || !QUIZZES[skill]) return;
   const q = QUIZZES[skill];
-  if (!q) return;
 
   const s = document.getElementById('quizSection');
   document.getElementById('quizTitle').textContent = `In-House Diagnostic Verification: ${skill.toUpperCase()}`;
@@ -530,10 +569,11 @@ function launchQuiz(skill) {
   `;
   s.classList.remove('hidden');
   s.scrollIntoView({ behavior: 'smooth' });
-  lucide.createIcons();
+  safeCreateIcons();
 }
 
 function handleAnswer(skill, selected, correct) {
+  if (typeof QUIZZES === "undefined" || !QUIZZES || !QUIZZES[skill]) return;
   const q = QUIZZES[skill];
   const res = document.getElementById('quizRes');
   res.classList.remove('hidden');
@@ -572,7 +612,7 @@ function openCertificateModal() {
   document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US', options);
 
   document.getElementById('certificateModal').classList.remove('hidden');
-  lucide.createIcons();
+  safeCreateIcons();
 }
 
 function closeCertificateModal() {

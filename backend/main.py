@@ -125,32 +125,56 @@ TAXONOMY: Dict[str, Dict[str, Any]] = {
 
 def resolve_role(query: str) -> Dict[str, Any]:
     q = query.lower().strip()
-    # 1. Exact Key Match
+    
+    # 1. Exact Dictionary Match
     if q in TAXONOMY:
         return TAXONOMY[q]
-    
-    # 2. Alias / Title Partial Match
+        
     for key, data in TAXONOMY.items():
         if q == data["title"].lower() or any(alias in q or q in alias for alias in data.get("aliases", [])):
             return data
-            
-    # 3. Keyword Heuristic Match
-    if "data" in q or "analyst" in q:
-        return TAXONOMY["data_analyst"]
-    if "devops" in q or "cloud" in q or "sre" in q:
-        return TAXONOMY["devops"]
-    if "ai" in q or "llm" in q or "gen" in q:
+
+    # 2. Heuristic Keyword Matching across major domains
+    if any(k in q for k in ["gen_ai", "gen ai", "generative", "llm", "rag", "prompt"]):
         return TAXONOMY["gen_ai"]
-    if "ml" in q or "machine" in q:
+    if any(k in q for k in ["ai_ml", "ml", "machine learning", "nlp", "deep learning", "vision"]):
         return TAXONOMY["ai_ml"]
-    if "security" in q or "cyber" in q or "soc" in q:
+    if any(k in q for k in ["data", "analyst", "bi", "power bi", "mospi", "survey", "statistic"]):
+        return TAXONOMY["data_analyst"]
+    if any(k in q for k in ["devops", "cloud", "sre", "reliability", "aws", "infrastructure", "linux", "admin"]):
+        return TAXONOMY["devops"]
+    if any(k in q for k in ["security", "cyber", "soc", "infosec", "vapt", "hacker", "network"]):
         return TAXONOMY["cybersecurity"]
-    if "back" in q or "api" in q or "node" in q:
+    if any(k in q for k in ["back", "api", "node", "django", "fastapi", "database", "dba"]):
         return TAXONOMY["backend"]
-    if "full" in q:
+    if any(k in q for k in ["full", "fullstack", "mern"]):
         return TAXONOMY["fullstack"]
+    if any(k in q for k in ["front", "react", "web developer"]):
+        return TAXONOMY["frontend"]
         
-    return TAXONOMY["frontend"]
+    # 3. Dynamic Fallback for Other Roles (Mobile, Design, QA, SEO, PM, Sales)
+    # Isse Frontend par fallback nahi hoga, candidate ka select kiya gaya exact role dikhega
+    return {
+        "title": query.title(),
+        "skills": {
+            "core domain fundamentals": {
+                "synonyms": [q, "fundamentals", "principles", "basics"],
+                "guide": f"Core industry principles and standard workflows for {query.title()}.",
+                "webUrl": "https://developer.mozilla.org/",
+                "webPlatform": "Industry Docs",
+                "ytUrl": "https://www.youtube.com/",
+                "ytPlatform": "Technical Course Track"
+            },
+            "industry tools & frameworks": {
+                "synonyms": ["tools", "git", "analytics", "design", "agile", "testing", "management"],
+                "guide": f"Standard tooling, project workflows and lifecycle management for {query.title()}.",
+                "webUrl": "https://github.com/",
+                "webPlatform": "Verified Framework Guide",
+                "ytUrl": "https://www.youtube.com/",
+                "ytPlatform": "Hands-on Masterclass"
+            }
+        }
+    }
 
 # ----------------------------------------------------
 # Background Supabase Task
