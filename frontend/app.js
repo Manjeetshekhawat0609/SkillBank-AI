@@ -17,7 +17,17 @@ if (typeof pdfjsLib !== "undefined") {
    Production Backend Configuration
    -------------------------------------------------------------------------- */
 
-const BACKEND_URL = "https://skillgapapp-backend.onrender.com";
+/*
+   FIX: This was previously "https://skillgapapp-backend.onrender.com",
+   a URL that does not exist (confirmed 404 from Render itself). The
+   actual deployed Render service is "skillbank-ai". Using the wrong
+   URL caused every request to fail with 404 + a CORS error (browsers
+   report a missing-CORS-header error whenever a request fails before
+   getting a real response, which is exactly what a 404-from-Render,
+   not-from-your-app looks like).
+*/
+
+const BACKEND_URL = "https://skillbank-ai.onrender.com";
 
 const EVALUATE_ENDPOINT = `${BACKEND_URL}/api/evaluate`;
 
