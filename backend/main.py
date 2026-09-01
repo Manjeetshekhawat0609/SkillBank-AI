@@ -61,25 +61,23 @@ app = FastAPI(
 # CORS Configuration
 # ============================================================
 #
-# NOTE:
-# allow_credentials=True cannot safely be combined with a wildcard
-# origin in browsers.
+# NOTE (FIX):
+# The original config only whitelisted localhost origins. That means
+# any real deployment (Vercel, phone browser, opening index.html
+# directly as a file, a different laptop, etc.) would be silently
+# blocked by the BROWSER before the request ever reached this server
+# — which looks exactly like "random errors everywhere".
 #
-# By default we allow common development origins.
-# Additional origins can be supplied through:
+# Fix: if the operator explicitly sets ALLOWED_ORIGINS (comma
+# separated) we honor that exact list with credentials enabled
+# (useful if you later add cookie-based auth). Otherwise we default
+# to allowing any origin with credentials disabled, which is safe
+# for this public, cookie-less JSON API and guarantees the frontend
+# works from any device/network/deployment without extra config.
 #
 # ALLOWED_ORIGINS=https://example.com,http://localhost:3000
 #
 # ============================================================
-
-_default_origins = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://localhost:8000",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:8000",
-]
 
 _env_origins = os.getenv("ALLOWED_ORIGINS", "")
 
@@ -89,14 +87,19 @@ if _env_origins.strip():
         for origin in _env_origins.split(",")
         if origin.strip()
     ]
+    ALLOW_CREDENTIALS = True
 else:
-    ALLOWED_ORIGINS = _default_origins
+    # Safe default: no cookies/credentials are used by this API,
+    # so a wildcard origin is safe and works everywhere (phone,
+    # laptop off, Vercel, file:// preview, etc.).
+    ALLOWED_ORIGINS = ["*"]
+    ALLOW_CREDENTIALS = False
 
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=ALLOW_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -1320,8 +1323,15 @@ def resolve_target_role(role_input: str):
         "quantitative research financial data analyst": "financial_analyst",
         "quantitative analyst": "financial_analyst",
 
+        # FIX: this alias never matched because normalize_text()
+        # turns "&" into "and", so the incoming text became
+        # "statistical cadre and survey analyst mospi track" while
+        # this key omitted "and". Selecting this exact role always
+        # produced a 400 "Unsupported corporate role" error.
+        "statistical cadre and survey analyst mospi track": "data_analyst",
         "statistical cadre survey analyst mospi track": "data_analyst",
         "statistical analyst": "data_analyst",
+        "survey analyst": "data_analyst",
 
         # -------------------------
         # Cloud / Infrastructure
@@ -1509,6 +1519,12 @@ def resolve_target_role(role_input: str):
             "power bi",
             "tableau",
             "statistics",
+            # FIX: added so roles like "Statistical Cadre & Survey
+            # Analyst (MoSPI Track)" resolve correctly even if the
+            # exact alias lookup above ever misses a phrasing.
+            "statistical",
+            "survey analyst",
+            "mospi",
         ]),
 
         ("sre", [
@@ -2135,11 +2151,17 @@ async def evaluate_resume(
         f"{timestamp}"
     )
 
-    cert_hash = (
-        f"SKB-2026-"
-        f"{hashlib.sha256(raw_str.encode("utf-8")).hexdigest()[:12].upper()}"
-        f"-IN"
-    )
+    # FIX: original code used
+    #   f"{hashlib.sha256(raw_str.encode("utf-8")).hexdigest()...}"
+    # which nests DOUBLE quotes inside a DOUBLE-quoted f-string.
+    # On Python versions before 3.12 this is a hard SyntaxError,
+    # which prevents this entire file (and therefore the whole
+    # backend) from starting at all — every single request would
+    # fail, regardless of device, network, or feature used.
+    # Using single quotes for the inner literal fixes it everywhere.
+    encoded_hash = hashlib.sha256(raw_str.encode('utf-8')).hexdigest()[:12].upper()
+
+    cert_hash = f"SKB-2026-{encoded_hash}-IN"
 
     # ========================================================
     # Non-blocking Async Persistence
