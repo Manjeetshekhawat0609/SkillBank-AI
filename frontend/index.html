@@ -77,15 +77,20 @@
       <!-- Candidate Input Section -->
       <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 max-w-4xl mx-auto mb-10">
         <form id="evaluationForm" onsubmit="event.preventDefault(); runAnalysis();">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <div>
               <label for="candidateName" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">1. Candidate Full Name</label>
               <input type="text" id="candidateName" name="candidateName" placeholder="e.g. Roshan Patel" required class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
             </div>
 
             <div>
+              <label for="universityName" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">2. University / Institution Name</label>
+              <input type="text" id="universityName" name="universityName" placeholder="e.g. Poornima University, Jaipur" required class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500" />
+            </div>
+
+            <div>
               <label for="targetRoleInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center justify-between">
-                <span>2. Corporate Target Role</span>
+                <span>3. Corporate Target Role</span>
                 <span class="text-[10px] text-emerald-400 font-normal">Select or type acronyms</span>
               </label>
               <input 
@@ -156,7 +161,7 @@
             </div>
 
             <div>
-              <label for="resumeFile" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">3. Resume File (PDF Only)</label>
+              <label for="resumeFile" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">4. Resume File (PDF Only)</label>
               <input type="file" id="resumeFile" name="resumeFile" accept=".pdf" required class="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-xl px-3 py-2.5 text-sm file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
             </div>
           </div>

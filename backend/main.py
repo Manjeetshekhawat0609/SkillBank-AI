@@ -1700,193 +1700,310 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
 # ============================================================
 
 SKILL_ALIASES: Dict[str, List[str]] = {
-    "html": [
-        "html",
-        "html5",
-    ],
-    "css": [
-        "css",
-        "css3",
-    ],
-    "javascript": [
-        "javascript",
-        "java script",
-        "ecmascript",
-    ],
-    "typescript": [
-        "typescript",
-    ],
-    "react": [
-        "react",
-        "reactjs",
-        "react js",
-    ],
-    "nextjs": [
-        "nextjs",
-        "next js",
-        "next",
-    ],
-    "nodejs": [
-        "nodejs",
-        "node js",
-        "node",
-    ],
+    # --------------------------------------------------------
+    # Web / Frontend
+    # --------------------------------------------------------
+    "html": ["html", "html5"],
+    "css": ["css", "css3"],
+    "javascript": ["javascript", "java script", "ecmascript", "js"],
+    "typescript": ["typescript", "ts"],
+    "react": ["react", "reactjs", "react js", "react.js"],
+    "nextjs": ["nextjs", "next js", "next.js"],
+    "tailwind": ["tailwind", "tailwindcss", "tailwind css"],
+    "redux": ["redux", "redux toolkit", "rtk", "state management"],
+
+    # --------------------------------------------------------
+    # Backend
+    # --------------------------------------------------------
+    "nodejs": ["nodejs", "node js", "node.js", "node"],
     "rest api": [
-        "rest api",
-        "rest apis",
-        "restful api",
-        "restful apis",
-        "api development",
+        "rest api", "rest apis", "restful api", "restful apis",
+        "api development", "api integration", "web api",
     ],
-    "postgresql": [
-        "postgresql",
-        "postgres",
-    ],
-    "mongodb": [
-        "mongodb",
-        "mongo db",
-        "mongo",
-    ],
+    "postgresql": ["postgresql", "postgres", "psql"],
+    "mongodb": ["mongodb", "mongo db", "mongo", "nosql"],
+    "fastapi": ["fastapi", "fast api"],
+    "django": ["django", "django rest framework", "drf"],
+    "redis": ["redis", "redis cache", "in-memory cache", "caching"],
+
+    # --------------------------------------------------------
+    # DevOps / Cloud
+    # --------------------------------------------------------
     "ci/cd": [
-        "ci/cd",
-        "ci cd",
-        "continuous integration",
-        "continuous deployment",
+        "ci/cd", "ci cd", "continuous integration", "continuous deployment",
+        "cicd", "github actions", "gitlab ci",
     ],
-    "pytorch": [
-        "pytorch",
-    ],
-    "scikit-learn": [
-        "scikit-learn",
-        "scikit learn",
-        "sklearn",
-    ],
-    "power bi": [
-        "power bi",
-        "powerbi",
-    ],
-    "machine learning": [
-        "machine learning",
-        "machine-learning",
-        "ml",
-    ],
-    "deep learning": [
-        "deep learning",
-        "deep-learning",
-    ],
+    "docker": ["docker", "docker container", "docker containers", "containerization"],
+    "kubernetes": ["kubernetes", "k8s", "kubectl", "helm"],
+    "terraform": ["terraform", "infrastructure as code", "iac"],
+    "linux": ["linux", "ubuntu", "debian", "centos", "unix", "kali", "kali linux", "rhel"],
+    "aws": ["aws", "amazon web services", "ec2", "s3 bucket", "amazon aws", "amazon s3"],
+    "bash": ["bash", "shell scripting", "shell script", "bash scripting"],
+    "jenkins": ["jenkins", "jenkins pipeline"],
+    "prometheus": ["prometheus"],
+    "grafana": ["grafana", "grafana dashboards"],
+    "networking": ["networking", "computer networks", "tcp/ip", "network protocols", "osi model"],
+
+    # --------------------------------------------------------
+    # Data Engineering
+    # --------------------------------------------------------
+    "apache spark": ["apache spark", "spark", "pyspark"],
+    "hadoop": ["hadoop", "hdfs", "mapreduce"],
+    "airflow": ["airflow", "apache airflow"],
+    "kafka": ["kafka", "apache kafka", "event streaming"],
+
+    # --------------------------------------------------------
+    # Data / AI / ML
+    # --------------------------------------------------------
+    "pytorch": ["pytorch", "torch"],
+    "tensorflow": ["tensorflow", "tf", "keras"],
+    "scikit-learn": ["scikit-learn", "scikit learn", "sklearn"],
+    "machine learning": ["machine learning", "machine-learning", "ml", "supervised learning", "unsupervised learning"],
+    "deep learning": ["deep learning", "deep-learning", "neural networks", "neural network"],
+    "nlp": ["nlp", "natural language processing", "transformers", "huggingface", "bert", "text mining"],
+    "pandas": ["pandas", "dataframes", "dataframe"],
+    "numpy": ["numpy"],
+    "sql": ["sql", "mysql", "structured query language", "t-sql", "pl/sql", "plsql", "queries", "database queries"],
+    "power bi": ["power bi", "powerbi", "power-bi"],
+    "tableau": ["tableau", "tableau desktop"],
+    "excel": ["excel", "ms excel", "microsoft excel", "advanced excel", "vlookup", "pivot table", "pivot tables"],
+    "statistics": ["statistics", "statistical analysis", "statistical", "probability", "hypothesis testing", "survey analyst", "survey analysis"],
+    "data visualization": ["data visualization", "data viz", "matplotlib", "seaborn", "visualization"],
     "prompt engineering": [
-        "prompt engineering",
-        "prompt engineer",
-        "prompt engineering techniques",
+        "prompt engineering", "prompt engineer", "prompt design",
+        "prompt engineering techniques", "prompt crafting",
     ],
     "vector databases": [
-        "vector database",
-        "vector databases",
-        "vector db",
-        "vector store",
+        "vector database", "vector databases", "vector db", "vector store",
+        "pinecone", "chromadb", "chroma db", "weaviate", "faiss",
     ],
-    "apache spark": [
-        "apache spark",
-        "spark",
-        "pyspark",
+    "langchain": ["langchain", "lang chain"],
+    "llamaindex": ["llamaindex", "llama index"],
+    "openai": ["openai", "open ai", "gpt-4", "gpt4", "chatgpt", "chatgpt api"],
+    "rag": ["rag", "retrieval augmented generation", "retrieval-augmented generation"],
+
+    # --------------------------------------------------------
+    # Mobile
+    # --------------------------------------------------------
+    "react native": ["react native", "reactnative", "react-native"],
+    "mobile development": ["mobile development", "mobile app development", "mobile apps", "app development", "mobile applications"],
+    "android": ["android", "android development", "android app", "android apps"],
+    "ios": ["ios", "ios development", "ios app", "iphone app", "iphone development"],
+    "dart": ["dart", "dart language", "dart lang"],
+    "flutter": ["flutter", "flutter sdk", "flutter framework"],
+    "firebase": ["firebase", "firestore", "firebase auth", "firebase realtime database"],
+    "kotlin": ["kotlin", "kotlin coroutines"],
+    "android sdk": ["android sdk", "android studio", "android development kit"],
+    "jetpack compose": ["jetpack compose", "compose", "declarative ui"],
+    "gradle": ["gradle", "build.gradle", "build gradle"],
+    "swift": ["swift", "swift programming", "swift language"],
+    "swiftui": ["swiftui", "swift ui"],
+    "uikit": ["uikit", "ui kit"],
+    "xcode": ["xcode"],
+    "cocoapods": ["cocoapods", "cocoa pods", "spm", "swift package manager"],
+
+    # --------------------------------------------------------
+    # QA / Testing
+    # --------------------------------------------------------
+    "selenium": ["selenium", "selenium webdriver"],
+    "cypress": ["cypress"],
+    "playwright": ["playwright"],
+    "junit": ["junit", "testng", "unit testing", "unit tests"],
+    "test automation": [
+        "test automation", "automated testing", "automation testing",
+        "regression testing", "sdet", "qa automation",
     ],
-    "kubernetes": [
-        "kubernetes",
-        "k8s",
-    ],
-    "terraform": [
-        "terraform",
-    ],
-    "docker": [
-        "docker",
-        "docker container",
-        "docker containers",
-    ],
-    "linux": [
-        "linux",
-        "ubuntu",
-        "debian",
-        "centos",
-    ],
-    "wireshark": [
-        "wireshark",
-    ],
+
+    # --------------------------------------------------------
+    # Cybersecurity
+    # --------------------------------------------------------
+    "wireshark": ["wireshark", "packet analysis", "packet capture"],
     "penetration testing": [
-        "penetration testing",
-        "penetration test",
-        "pentesting",
-        "pen testing",
+        "penetration testing", "penetration test", "pentesting",
+        "pen testing", "vulnerability assessment", "vapt",
     ],
-    "burp suite": [
-        "burp suite",
-        "burpsuite",
+    "burp suite": ["burp suite", "burpsuite", "burp"],
+    "nmap": ["nmap", "port scanning"],
+    "owasp": ["owasp", "owasp top 10", "web application security"],
+    "network security": [
+        "network security", "network protocols", "firewalls", "firewall",
+        "vpn", "network administration", "ids", "ips",
     ],
-    "nmap": [
-        "nmap",
+    "siem": [
+        "siem", "splunk", "qradar", "security information and event management",
+        "log analysis", "log monitoring",
     ],
-    "owasp": [
-        "owasp",
+    "ethical hacking": [
+        "ethical hacking", "ethical hacker", "ceh", "certified ethical hacker",
+        "white hat", "white hat hacking",
     ],
-    "selenium": [
-        "selenium",
+    "cryptography": [
+        "cryptography", "encryption", "ssl", "tls", "cryptographic",
+        "public key infrastructure", "pki",
     ],
-    "cypress": [
-        "cypress",
+    "metasploit": ["metasploit", "meterpreter"],
+
+    # --------------------------------------------------------
+    # Design / UI-UX
+    # --------------------------------------------------------
+    "figma": ["figma", "figma prototyping"],
+    "wireframing": ["wireframing", "wireframe", "wireframes", "low fidelity design", "low-fidelity design"],
+    "prototyping": ["prototyping", "prototype", "interactive prototype", "interactive prototypes"],
+    "user research": [
+        "user research", "usability research", "user interviews",
+        "user testing", "ux research",
     ],
-    "playwright": [
-        "playwright",
+    "design systems": ["design systems", "design system", "design tokens", "component library"],
+    "usability testing": ["usability testing", "usability test", "a/b testing", "ab testing"],
+    "adobe xd": ["adobe xd", "xd"],
+
+    # --------------------------------------------------------
+    # Product / Project Management
+    # --------------------------------------------------------
+    "product strategy": [
+        "product strategy", "product roadmap", "product vision",
+        "prd", "product requirement", "product requirements",
     ],
-    "java": [
-        "java",
+    "agile": ["agile", "agile methodology", "kanban", "agile development"],
+    "scrum": ["scrum", "sprint planning", "scrum master", "sprints", "scrum ceremonies"],
+    "data analytics": ["data analytics", "analytics", "metrics analysis", "product analytics"],
+    "jira": ["jira", "confluence", "atlassian"],
+    "roadmap planning": ["roadmap planning", "product roadmap", "roadmapping", "quarterly planning"],
+
+    # --------------------------------------------------------
+    # Marketing / SEO
+    # --------------------------------------------------------
+    "seo": ["seo", "search engine optimization"],
+    "google analytics": ["google analytics", "ga4", "google analytics 4", "search console"],
+    "keyword research": ["keyword research", "keyword analysis", "keyword strategy"],
+    "content strategy": ["content strategy", "content marketing", "content planning"],
+    "on-page seo": ["on-page seo", "on page seo", "onpage seo", "meta tags", "title tags"],
+    "technical seo": [
+        "technical seo", "site speed", "core web vitals",
+        "xml sitemap", "robots.txt", "canonicalization",
     ],
-    "python": [
-        "python",
-        "python3",
-        "python 3",
+    "link building": ["link building", "backlinks", "backlink building", "off-page seo"],
+    "semrush": ["semrush", "ahrefs", "moz"],
+
+    # --------------------------------------------------------
+    # Sales / Business Development
+    # --------------------------------------------------------
+    "lead generation": ["lead generation", "prospecting", "cold outreach", "sales pipeline", "outbound prospecting"],
+    "crm": ["crm", "customer relationship management", "hubspot", "hubspot crm"],
+    "cold calling": ["cold calling", "cold calls", "outbound calling"],
+    "salesforce": ["salesforce", "sfdc", "salesforce crm"],
+    "client qualification": ["client qualification", "lead qualification", "bant"],
+    "negotiation": ["negotiation", "deal closing", "closing deals", "contract negotiation"],
+    "b2b sales": ["b2b sales", "business to business sales", "enterprise sales"],
+
+    # --------------------------------------------------------
+    # Finance
+    # --------------------------------------------------------
+    "financial modeling": [
+        "financial modeling", "financial model", "3 statement model",
+        "three statement model", "financial models",
     ],
-    "git": [
-        "git",
-        "github",
-        "gitlab",
-    ],
+    "dcf": ["dcf", "discounted cash flow"],
+    "valuation": ["valuation", "company valuation", "equity valuation"],
+    "balance sheet": ["balance sheet", "financial statements", "income statement"],
+    "accounting": ["accounting", "bookkeeping", "gaap"],
+
+    # --------------------------------------------------------
+    # General / Cross-cutting
+    # --------------------------------------------------------
+    "java": ["java", "core java"],
+    "python": ["python", "python3", "python 3"],
+    "git": ["git", "github", "gitlab", "version control"],
 }
 
 
-def skill_is_present(skill: str, resume_text: str) -> bool:
-    """
-    Check whether a required skill exists in normalized resume text.
+# ============================================================
+# Precompiled Skill Matchers (Performance Optimization)
+# ============================================================
+#
+# FIX (speed): The original skill_is_present() re-ran
+# normalize_skill_text() on the *entire* resume text and re-compiled
+# a fresh regex for every single required skill, on every single
+# request (8-9+ times per evaluation). On Render's free-tier CPU
+# this repeated regex compilation and string normalization adds up
+# and is completely unnecessary — the resume text and the alias
+# list are both static once parsed, so both can be prepared once.
+#
+# SKILL_MATCHERS pre-normalizes every alias and pre-compiles every
+# single-word regex pattern ONE TIME at server startup, not per
+# request. skill_is_present() now takes already-normalized resume
+# text and just does cheap substring / precompiled-regex checks.
+# ============================================================
 
-    Uses aliases for common technology naming variations.
+SKILL_MATCHERS: Dict[str, List[Any]] = {}
+
+for _skill_key, _alias_list in SKILL_ALIASES.items():
+    _matchers: List[Any] = []
+
+    for _alias in _alias_list:
+        _normalized_alias = normalize_skill_text(_alias)
+
+        if not _normalized_alias:
+            continue
+
+        if " " in _normalized_alias or "/" in _normalized_alias:
+            # Phrase match — plain substring check, no regex needed.
+            _matchers.append(("phrase", _normalized_alias, None))
+        else:
+            # Single word — precompile the word-boundary regex once.
+            _pattern = re.compile(
+                r"(?<![a-z0-9+#])" + re.escape(_normalized_alias) + r"(?![a-z0-9+#])"
+            )
+            _matchers.append(("regex", _normalized_alias, _pattern))
+
+    SKILL_MATCHERS[_skill_key] = _matchers
+
+
+def skill_is_present(skill: str, normalized_resume_text: str) -> bool:
+    """
+    Check whether a required skill exists in ALREADY-NORMALIZED
+    resume text.
+
+    IMPORTANT: normalized_resume_text must already be passed through
+    normalize_skill_text() by the caller (done once per request, not
+    once per skill) — see evaluate_resume().
+
+    Falls back to treating the raw skill string as its own alias if
+    it isn't present in SKILL_ALIASES.
     """
 
-    if not skill or not resume_text:
+    if not skill or not normalized_resume_text:
         return False
 
-    normalized_resume = normalize_skill_text(resume_text)
+    skill_key = skill.lower()
 
-    aliases = SKILL_ALIASES.get(
-        skill.lower(),
-        [skill.lower()],
-    )
+    matchers = SKILL_MATCHERS.get(skill_key)
 
-    for alias in aliases:
-
-        normalized_alias = normalize_skill_text(alias)
+    if matchers is None:
+        # No predefined aliases for this skill — fall back to a
+        # single on-the-fly matcher built from the skill name itself.
+        normalized_alias = normalize_skill_text(skill_key)
 
         if not normalized_alias:
-            continue
+            return False
 
-        # Multi-word phrases can be checked directly.
         if " " in normalized_alias or "/" in normalized_alias:
-            if normalized_alias in normalized_resume:
+            return normalized_alias in normalized_resume_text
+
+        pattern = re.compile(
+            r"(?<![a-z0-9+#])" + re.escape(normalized_alias) + r"(?![a-z0-9+#])"
+        )
+
+        return bool(pattern.search(normalized_resume_text))
+
+    for kind, normalized_alias, pattern in matchers:
+
+        if kind == "phrase":
+            if normalized_alias in normalized_resume_text:
                 return True
-            continue
-
-        # Single-word skills use word boundaries.
-        pattern = r"(?<![a-z0-9+#])" + re.escape(normalized_alias) + r"(?![a-z0-9+#])"
-
-        if re.search(pattern, normalized_resume):
-            return True
+        else:
+            if pattern.search(normalized_resume_text):
+                return True
 
     return False
 
@@ -1897,6 +2014,7 @@ def skill_is_present(skill: str, resume_text: str) -> bool:
 
 async def async_sync_to_supabase(
     candidate_name: str,
+    university_name: str,
     role_key: str,
     role_title: str,
     readiness_score: int,
@@ -1919,15 +2037,42 @@ async def async_sync_to_supabase(
 
         candidate_payload = {
             "full_name": candidate_name,
+            "university_name": university_name,
             "institution_id": institution_id,
         }
 
-        cand_res = (
-            supabase
-            .table("candidates")
-            .insert(candidate_payload)
-            .execute()
-        )
+        try:
+            cand_res = (
+                supabase
+                .table("candidates")
+                .insert(candidate_payload)
+                .execute()
+            )
+        except Exception as insert_error:
+            # FIX: if the "candidates" table in Supabase does not yet
+            # have a "university_name" column, the insert above will
+            # be rejected by Postgres. Rather than losing the whole
+            # record (and silently losing the candidate + audit row),
+            # we retry once WITHOUT the new column so older Supabase
+            # schemas keep working exactly as before. Add a
+            # "university_name" text column to your "candidates"
+            # table in Supabase to start persisting it.
+            print(
+                f"Supabase insert with university_name failed, "
+                f"retrying without it: {insert_error}"
+            )
+
+            fallback_payload = {
+                "full_name": candidate_name,
+                "institution_id": institution_id,
+            }
+
+            cand_res = (
+                supabase
+                .table("candidates")
+                .insert(fallback_payload)
+                .execute()
+            )
 
         cand_id = (
             cand_res.data[0]["id"]
@@ -2007,6 +2152,8 @@ async def evaluate_resume(
     background_tasks: BackgroundTasks,
     candidate_name: Optional[str] = Form(None),
     full_name: Optional[str] = Form(None),
+    university_name: Optional[str] = Form(None),
+    institution_name: Optional[str] = Form(None),
     target_role: str = Form(...),
     institution_id: Optional[str] = Form("poornima"),
     resume: Optional[UploadFile] = File(None),
@@ -2020,6 +2167,17 @@ async def evaluate_resume(
         candidate_name
         or full_name
         or "Evaluated Candidate"
+    ).strip()
+
+    # ========================================================
+    # University / Institution Name
+    # (NEW FIELD — 4th user input, persisted to Supabase)
+    # ========================================================
+
+    final_university = (
+        university_name
+        or institution_name
+        or "Not Specified"
     ).strip()
 
     # ========================================================
@@ -2170,6 +2328,7 @@ async def evaluate_resume(
     background_tasks.add_task(
         async_sync_to_supabase,
         final_name,
+        final_university,
         resolved_key,
         role_meta["title"],
         readiness_score,
@@ -2186,6 +2345,14 @@ async def evaluate_resume(
     return {
         "status": "success",
         "candidate_name": final_name,
+        "university_name": final_university,
+        # FIX (issue 1 — "job name/data mismatch"): return exactly
+        # what the user typed/selected as requested_role, so the
+        # frontend can display that instead of the backend's
+        # internally-resolved taxonomy title. The resolved title is
+        # still returned separately and still drives the actual
+        # skill/benchmark matching underneath.
+        "requested_role": target_role,
         "role_key": resolved_key,
         "role_title": role_meta["title"],
         "readiness_score": readiness_score,

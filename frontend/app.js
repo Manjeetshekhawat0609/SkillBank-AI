@@ -31,6 +31,8 @@ const BACKEND_URL = "https://skillbank-ai.onrender.com";
 
 const EVALUATE_ENDPOINT = `${BACKEND_URL}/api/evaluate`;
 
+const HEALTH_ENDPOINT = `${BACKEND_URL}/health`;
+
 /*
    IMPORTANT:
    Do NOT use localhost in production.
@@ -86,6 +88,29 @@ document.addEventListener("DOMContentLoaded", () => {
       runAnalysis();
     });
   }
+
+  /*
+     FIX (issue 2 & 3 — "server not awake" / slow first load):
+
+     Render's free tier puts the backend to sleep after ~15 minutes
+     of no traffic. The very first request after that has to wait
+     for the server to "wake up" (cold start), which is the 10-20
+     second delay being seen.
+
+     We can't force Render to never sleep from client-side code, but
+     we CAN start waking it up the instant the page loads instead of
+     waiting until the user clicks "Evaluate". By the time someone
+     fills in their name, university, role and picks a resume file
+     (usually 15-30+ seconds), the backend has often already finished
+     waking up in the background — so the actual Evaluate click feels
+     instant instead of timing out.
+
+     This is a silent, fire-and-forget ping — failures are ignored,
+     since the real evaluate request has its own retry logic anyway.
+  */
+  fetch(HEALTH_ENDPOINT, { method: "GET" }).catch(() => {
+    /* Ignore — this is just a background warm-up ping. */
+  });
 });
 
 
@@ -724,7 +749,7 @@ async function requestEvaluation(formData) {
   return {
     success: false,
     error:
-      "Unable to connect to the evaluation engine. Please try again shortly."
+      "The evaluation engine is taking longer than usual to wake up. Please wait a few seconds and click Evaluate again."
   };
 }
 
@@ -739,6 +764,8 @@ async function runAnalysis() {
   const roleInput = document.getElementById("targetRoleInput");
 
   const nameInput = document.getElementById("candidateName");
+
+  const universityInput = document.getElementById("universityName");
 
   const analyzeBtn = document.getElementById("analyzeBtn");
 
@@ -760,6 +787,11 @@ async function runAnalysis() {
     return;
   }
 
+  if (!universityInput || !universityInput.value.trim()) {
+    showAlert("Please enter your University / Institution Name.");
+    return;
+  }
+
   if (!roleInput || !roleInput.value.trim()) {
     showAlert("Please select or enter a Target Corporate Role.");
     return;
@@ -776,6 +808,8 @@ async function runAnalysis() {
 
 
   const candidateName = nameInput.value.trim();
+
+  const universityName = universityInput.value.trim();
 
   const selectedRole = roleInput.value.trim();
 
@@ -809,7 +843,7 @@ async function runAnalysis() {
 
   if (btnText) {
     btnText.textContent =
-      "Connecting to SkillBank Evaluation Engine...";
+      "Connecting... (first request may take up to 20s if the server was idle)";
   }
 
 
@@ -822,6 +856,8 @@ async function runAnalysis() {
   formData.append("candidate_name", candidateName);
 
   formData.append("full_name", candidateName);
+
+  formData.append("university_name", universityName);
 
   formData.append("target_role", selectedRole);
 
@@ -907,9 +943,26 @@ function renderEvaluationResults(data, requestedRole) {
   computedScore =
     Number(safeData.readiness_score) || 0;
 
+  /*
+     FIX (issue 1 — "job name and shown data don't match"):
+
+     Previously this prioritized the backend's internally-resolved
+     taxonomy title (role_title) over what the user actually typed
+     or selected. If someone typed a slightly different phrasing of
+     a role, the backend would silently map it to its closest known
+     taxonomy title and show THAT instead — which looked like the
+     result didn't match what was searched for.
+
+     Now we always show exactly what the user typed/selected
+     (requestedRole) as the headline role name. The backend's
+     resolved taxonomy role is still used underneath to pick the
+     correct skill list and benchmarks — only the DISPLAYED name
+     changes to match the user's input exactly.
+  */
   activeRoleTitle =
-    safeData.role_title ||
     requestedRole ||
+    safeData.requested_role ||
+    safeData.role_title ||
     "Industry Engineer";
 
   activeCertHash =
