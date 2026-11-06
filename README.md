@@ -5,7 +5,7 @@
 ---
 
 ## 📌 Overview
-
+ 
 **SkillBank** bridges the gap between academic curricula and evolving corporate tech demands. Using vector-based skill taxonomy mapping, the engine parses candidate resumes in real time, benchmarks their technical depth against corporate role requirements, delivers targeted multi-modal learning roadmaps (Web Docs + Video Masterclasses), and issues tamper-proof cryptographic competency certificates.
 
 ---
